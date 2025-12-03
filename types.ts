@@ -9,7 +9,7 @@ export interface Product {
     reviews: number;
     ingredients: string[];
     isBestSeller?: boolean;
-    stock: number;
+    // stock: number; // REMOVED
     // Sales & Pre-order
     isFlashSale?: boolean;
     flashSalePrice?: number;

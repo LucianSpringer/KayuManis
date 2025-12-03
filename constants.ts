@@ -12,7 +12,6 @@ export const PRODUCTS: Product[] = [
         reviews: 120,
         ingredients: ["Flour", "Milk", "Butter", "Sugar", "Yeast"],
         isBestSeller: true,
-        stock: 50,
         variants: [
             {
                 name: "Flavor",
@@ -35,7 +34,6 @@ export const PRODUCTS: Product[] = [
         reviews: 85,
         ingredients: ["Dark Chocolate", "Cream", "Flour", "Eggs"],
         isBestSeller: true,
-        stock: 20,
         variants: [
             {
                 name: "Size",
@@ -66,7 +64,6 @@ export const PRODUCTS: Product[] = [
         reviews: 200,
         ingredients: ["Flour", "Butter", "Yeast", "Milk", "Salt"],
         isBestSeller: true,
-        stock: 0
     },
     {
         id: 4,
@@ -78,7 +75,6 @@ export const PRODUCTS: Product[] = [
         rating: 4.6,
         reviews: 50,
         ingredients: ["Whole Wheat Flour", "Water", "Salt", "Sourdough Starter"],
-        stock: 15
     },
     {
         id: 5,
@@ -90,7 +86,6 @@ export const PRODUCTS: Product[] = [
         rating: 4.9,
         reviews: 110,
         ingredients: ["Cream Cheese", "Graham Crackers", "Strawberries", "Sugar", "Eggs"],
-        stock: 10
     },
     {
         id: 6,
@@ -102,7 +97,6 @@ export const PRODUCTS: Product[] = [
         rating: 4.5,
         reviews: 40,
         ingredients: ["Puff Pastry", "Cheddar Cheese", "Parmesan", "Egg Wash"],
-        stock: 30
     },
     {
         id: 7,
@@ -114,7 +108,6 @@ export const PRODUCTS: Product[] = [
         rating: 4.8,
         reviews: 95,
         ingredients: ["Flour", "Pandan Juice", "Coconut Milk", "Sugar", "Eggs"],
-        stock: 5
     },
     {
         id: 8,
@@ -126,7 +119,6 @@ export const PRODUCTS: Product[] = [
         rating: 4.6,
         reviews: 60,
         ingredients: ["Beef Sausage", "Puff Pastry", "Egg", "Sesame Seeds"],
-        stock: 25
     },
     {
         id: 10,
@@ -139,7 +131,6 @@ export const PRODUCTS: Product[] = [
         reviews: 230,
         ingredients: ["Dark Chocolate", "Butter", "Eggs", "Flour"],
         isBestSeller: true,
-        stock: 15,
         isFlashSale: true,
         flashSalePrice: 49000,
         flashSaleEndTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours from now
@@ -154,7 +145,6 @@ export const PRODUCTS: Product[] = [
         rating: 5.0,
         reviews: 0,
         ingredients: ["Nastar", "Kaastengels", "Putri Salju"],
-        stock: 100,
         isPreOrder: true,
         preOrderDate: "20 Dec 2025"
     },
@@ -168,7 +158,6 @@ export const PRODUCTS: Product[] = [
         rating: 4.7,
         reviews: 45,
         ingredients: ["Mixed Breads", "Strawberry Jam"],
-        stock: 20
     }
 ];
 

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingCart, Menu as MenuIcon, X, User, MessageCircle, Send, Star, MapPin, Phone, Mail, Instagram, Facebook, Tag, Check, AlertCircle, Eye, Heart, Zap } from 'lucide-react';
 import { Product, CartItem, Review } from '../types';
 import { getBakerResponse } from '../services/geminiService';
+import { InventoryAllocator } from '../src/core/catalogue/InventoryAllocator';
 
 // --- Contexts ---
 export const CartContext = React.createContext<{
@@ -183,6 +184,7 @@ export const NewsletterPopup: React.FC = () => {
 
 export const QuickViewModal: React.FC<{ product: Product; onClose: () => void }> = ({ product, onClose }) => {
     const { addToCart } = React.useContext(CartContext);
+    const stock = InventoryAllocator.getInstance().getAvailableStock(product.id);
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
@@ -231,18 +233,18 @@ export const QuickViewModal: React.FC<{ product: Product; onClose: () => void }>
 
                     <button
                         onClick={() => {
-                            if (product.stock > 0) {
+                            if (stock > 0) {
                                 addToCart(product);
                                 onClose();
                             }
                         }}
-                        disabled={product.stock === 0}
-                        className={`w-full text-white py-4 rounded-xl font-bold shadow-lg transition flex items-center justify-center gap-2 group ${product.stock > 0 ? 'bg-stone-900 hover:bg-amber-600' : 'bg-stone-400 cursor-not-allowed'}`}
+                        disabled={stock === 0}
+                        className={`w-full text-white py-4 rounded-xl font-bold shadow-lg transition flex items-center justify-center gap-2 group ${stock > 0 ? 'bg-stone-900 hover:bg-amber-600' : 'bg-stone-400 cursor-not-allowed'}`}
                     >
                         <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform" />
                         Add to Cart
                     </button>
-                    {product.stock === 0 && (
+                    {stock === 0 && (
                         <p className="text-red-500 text-sm font-bold mt-2 text-center">Out of Stock</p>
                     )}
                 </div>
@@ -256,6 +258,7 @@ export const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
     const navigate = useNavigate();
     const [showQuickView, setShowQuickView] = useState(false);
     const isWishlisted = wishlist.includes(product.id);
+    const stock = InventoryAllocator.getInstance().getAvailableStock(product.id);
 
     return (
         <>
@@ -272,7 +275,7 @@ export const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
                             Best Seller
                         </span>
                     )}
-                    {product.stock === 0 && (
+                    {stock === 0 && (
                         <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-20">
                             <span className="bg-red-600 text-white font-bold px-4 py-2 rounded-full transform -rotate-12 border-2 border-white shadow-lg">
                                 OUT OF STOCK
@@ -344,10 +347,10 @@ export const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    if (product.stock > 0) addToCart(product);
+                                    if (stock > 0) addToCart(product);
                                 }}
-                                disabled={product.stock === 0}
-                                className={`flex items-center gap-2 text-white px-4 py-2 rounded-full transition shadow-lg active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-1 ${product.stock > 0 ? 'bg-stone-900 hover:bg-amber-600' : 'bg-stone-400 cursor-not-allowed'}`}
+                                disabled={stock === 0}
+                                className={`flex items-center gap-2 text-white px-4 py-2 rounded-full transition shadow-lg active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-1 ${stock > 0 ? 'bg-stone-900 hover:bg-amber-600' : 'bg-stone-400 cursor-not-allowed'}`}
                                 aria-label={`Add ${product.name} to cart`}
                             >
                                 <ShoppingCart className="w-4 h-4" />
@@ -614,3 +617,56 @@ export const BakerAIWidget: React.FC = () => {
         </>
     );
 };
+/*
+
+
+const { addToCart, toggleWishlist, wishlist } = React.useContext(CartContext);
+const isWishlisted = wishlist.includes(product.id);
+const stock = InventoryAllocator.getInstance().getAvailableStock(product.id);
+
+return (
+    <div className="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-stone-100 overflow-hidden flex flex-col h-full">
+        <div className="relative h-64 overflow-hidden">
+            <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition duration-700" />
+            <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-4 group-hover:translate-x-0">
+                <button onClick={() => toggleWishlist(product.id)} className="p-2 bg-white rounded-full shadow-md hover:bg-red-50 transition">
+                    <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-red-500 text-red-500' : 'text-stone-400'}`} />
+                </button>
+                <Link to={`/product/${product.id}`} className="p-2 bg-white rounded-full shadow-md hover:bg-amber-50 transition">
+                    <Eye className="w-5 h-5 text-stone-600" />
+                </Link>
+            </div>
+            {stock < 5 && stock > 0 && (
+                <div className="absolute bottom-4 left-4 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full animate-pulse">
+                    Only {stock} left!
+                </div>
+            )}
+            {stock === 0 && (
+                <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px] flex items-center justify-center">
+                    <span className="bg-stone-900 text-white px-4 py-2 rounded-lg font-bold uppercase tracking-widest text-sm">Sold Out</span>
+                </div>
+            )}
+        </div>
+        <div className="p-6 flex flex-col flex-grow">
+            <div className="flex justify-between items-start mb-2">
+                <div className="text-xs font-bold text-amber-600 uppercase tracking-wider">{product.category}</div>
+                <div className="flex items-center gap-1 text-amber-500 text-xs font-bold">
+                    <Star className="w-3 h-3 fill-current" /> {product.rating}
+                </div>
+            </div>
+            <h3 className="font-serif font-bold text-xl text-stone-900 mb-2 group-hover:text-amber-700 transition">{product.name}</h3>
+            <p className="text-stone-500 text-sm mb-4 line-clamp-2 flex-grow">{product.description}</p>
+            <div className="flex items-center justify-between mt-auto">
+                <span className="text-lg font-bold text-stone-900">Rp {product.price.toLocaleString()}</span>
+                <button
+                    onClick={() => addToCart(product)}
+                    disabled={stock === 0}
+                    className="bg-stone-900 text-white p-3 rounded-full hover:bg-amber-600 transition disabled:opacity-50 disabled:hover:bg-stone-900"
+                >
+                    <ShoppingBag className="w-5 h-5" />
+                </button>
+            </div>
+        </div>
+    </div>
+);
+}; */
