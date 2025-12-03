@@ -4,6 +4,7 @@ import { CartContext } from '../context/CartContext';
 import { ResellerEngine } from '../core/commerce/ResellerEngine';
 import { ProductCard } from '../components/products/ProductCard';
 import { ProductEngine } from '../core/catalogue/ProductEngine';
+import { FamilyAccountManager } from '../components/profile/FamilyAccountManager';
 
 export const ProfilePage: React.FC = () => {
     const { userPoints, wishlist } = useContext(CartContext);
