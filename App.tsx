@@ -11,7 +11,7 @@ import { CartSidebar } from './src/components/commerce/CartSidebar';
 import { BakerAIWidget } from './src/components/ai/BakerAIWidget';
 import { NewsletterPopup } from './src/components/widgets/NewsletterPopup';
 
-// Pages (Fully Atomized)
+// Pages
 import { HomePage } from './src/pages/HomePage';
 import { MenuPage } from './src/pages/MenuPage';
 import { ProductDetailPage } from './src/pages/ProductDetailPage';
@@ -25,6 +25,10 @@ import { CustomOrderPage } from './src/pages/CustomOrderPage';
 import { ResellerPage } from './src/pages/ResellerPage';
 import { SubscriptionPage } from './src/pages/SubscriptionPage';
 
+// Backend Init
+import { OrbitalDB } from './src/core/data/OrbitalDB';
+import { EdgeMiddleware } from './src/core/security/EdgeMiddleware';
+
 const ScrollToTop = () => {
     const { pathname } = useLocation();
     useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
@@ -32,6 +36,12 @@ const ScrollToTop = () => {
 };
 
 const App: React.FC = () => {
+    useEffect(() => {
+        // Initialize Shadow Backend
+        OrbitalDB.getInstance();
+        EdgeMiddleware.getInstance();
+    }, []);
+
     return (
         <CartProvider>
             <Router>

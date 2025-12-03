@@ -11,12 +11,14 @@ export const Navbar: React.FC = () => {
     return (
         <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm">
             <div className="max-w-7xl mx-auto px-4 h-20 flex justify-between items-center">
-                <Link to="/" className="text-2xl font-serif font-bold text-amber-800">🥨 KayuManis</Link>
+                <Link to="/" className="text-3xl font-bold text-amber-800 font-serif tracking-tight flex items-center gap-2">
+                    <span className="text-4xl">🥨</span> KayuManis
+                </Link>
                 <div className="hidden md:flex gap-8 font-medium text-stone-600">
                     <Link to="/" className="hover:text-amber-600">Home</Link>
                     <Link to="/menu" className="hover:text-amber-600">Menu</Link>
+                    <Link to="/blog" className="hover:text-amber-600">Blog</Link>
                     <Link to="/profile" className="hover:text-amber-600">Profile</Link>
-                    <Link to="/admin" className="hover:text-amber-600">Admin</Link>
                 </div>
                 <div className="flex gap-4">
                     <button onClick={toggleCart} className="relative p-2 hover:text-amber-600">
