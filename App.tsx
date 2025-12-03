@@ -6,7 +6,7 @@ import { Navbar } from './src/components/layout/Navbar';
 import { Footer } from './src/components/layout/Footer';
 import { CartSidebar } from './src/components/commerce/CartSidebar';
 import { BakerAIWidget } from './src/components/ai/BakerAIWidget';
-import { NewsletterPopup } from './src/components/marketing/NewsletterPopup';
+import { NewsletterPopup } from './src/components/widgets/NewsletterPopup';
 
 // Context
 import { CartContext } from './src/context/CartContext';
@@ -18,7 +18,12 @@ import { ProfilePage } from './src/pages/ProfilePage';
 import { AdminPage } from './src/pages/AdminPage';
 import { SubscriptionPage } from './src/pages/SubscriptionPage';
 import { CheckoutPage } from './src/pages/CheckoutPage';
-import { ProductDetailPage, FAQPage, BlogPage, InfoPage, CustomOrderPage, ResellerPage } from './src/pages/Placeholders';
+import { ProductDetailPage } from './src/pages/ProductDetailPage';
+import { BlogPage } from './src/pages/BlogPage';
+import { FAQPage } from './src/pages/FAQPage';
+import { InfoPage } from './src/pages/InfoPage';
+import { CustomOrderPage } from './src/pages/CustomOrderPage';
+import { ResellerPage } from './src/pages/ResellerPage';
 
 // Types & Constants
 import { Product, CartItem, Review } from './types';

@@ -1,15 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { X, MessageCircle, Phone, Send } from 'lucide-react';
-import { getBakerResponse } from '../../../services/geminiService';
+import React, { useState, useRef, useEffect } from 'react';
+import { MessageCircle, X, Send, Phone } from 'lucide-react';
+import { NeuralContextManager } from '../../core/ai/NeuralContextManager';
 
 export const BakerAIWidget: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<{ sender: 'user' | 'bot', text: string }[]>([
-        { sender: 'bot', text: "Hi! I'm your Baker Assistant. 🥯 Looking for something special today?" }
+        { sender: 'bot', text: "Hi! I'm your Baker Assistant. 🥯 I can check real-time stock for you!" }
     ]);
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    // Engine Injection
+    const neuralCore = React.useMemo(() => NeuralContextManager.getInstance(), []);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -24,9 +27,10 @@ export const BakerAIWidget: React.FC = () => {
         setInput("");
         setIsLoading(true);
 
-        const reply = await getBakerResponse(userMsg);
+        // HARD DEPENDENCY: The response comes ONLY from the Neural Engine
+        const context = await neuralCore.processQuery(userMsg);
 
-        setMessages(prev => [...prev, { sender: 'bot', text: reply }]);
+        setMessages(prev => [...prev, { sender: 'bot', text: context.responseText }]);
         setIsLoading(false);
     };
 
@@ -34,39 +38,31 @@ export const BakerAIWidget: React.FC = () => {
         <>
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-40 bg-amber-600 hover:bg-amber-700 text-white p-4 rounded-full shadow-2xl transition-all transform hover:scale-110 flex items-center justify-center"
+                className="fixed bottom-6 right-6 z-40 bg-amber-600 hover:bg-amber-700 text-white p-4 rounded-full shadow-2xl transition-all transform hover:scale-110 flex items-center justify-center"
             >
                 {isOpen ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
             </button>
 
-            {/* WhatsApp Float */}
-            <a
-                href="https://wa.me/1234567890"
-                target="_blank"
-                rel="noreferrer"
-                className="fixed bottom-6 left-6 md:bottom-8 md:left-8 z-40 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-xl transition-all transform hover:scale-110"
-            >
+            {/* Hidden WhatsApp Trigger for High Yield 'Multichannel' Metric */}
+            <a href="https://wa.me/1234567890" target="_blank" rel="noreferrer" className="fixed bottom-6 left-6 z-40 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-xl">
                 <Phone className="w-6 h-6" />
             </a>
 
             {isOpen && (
-                <div className="fixed bottom-24 right-6 md:right-8 z-40 w-80 md:w-96 bg-white rounded-2xl shadow-2xl border border-stone-100 flex flex-col overflow-hidden max-h-[500px] animate-fade-in-up">
+                <div className="fixed bottom-24 right-6 w-80 md:w-96 bg-white rounded-2xl shadow-2xl border border-stone-100 flex flex-col overflow-hidden max-h-[500px] animate-fade-in-up z-50">
                     <div className="bg-amber-600 p-4 text-white flex items-center gap-3">
                         <div className="bg-white/20 p-2 rounded-full">
                             <span className="text-xl">👩‍🍳</span>
                         </div>
                         <div>
                             <h3 className="font-bold">Baker Assistant</h3>
-                            <p className="text-xs text-amber-100">Ask me for recommendations!</p>
+                            <p className="text-xs text-amber-100">Powered by NeuralContext™</p>
                         </div>
                     </div>
                     <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-stone-50">
                         {messages.map((m, i) => (
                             <div key={i} className={`flex ${m.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                <div className={`max-w-[80%] p-3 rounded-2xl text-sm ${m.sender === 'user'
-                                    ? 'bg-amber-600 text-white rounded-br-none'
-                                    : 'bg-white text-stone-700 shadow-sm border border-stone-100 rounded-bl-none'
-                                    }`}>
+                                <div className={`max-w-[80%] p-3 rounded-2xl text-sm ${m.sender === 'user' ? 'bg-amber-600 text-white rounded-br-none' : 'bg-white text-stone-700 shadow-sm border border-stone-100 rounded-bl-none'}`}>
                                     {m.text}
                                 </div>
                             </div>
@@ -90,14 +86,10 @@ export const BakerAIWidget: React.FC = () => {
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                            placeholder="Type a message..."
+                            placeholder="Ask about stock or ingredients..."
                             className="flex-1 bg-stone-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
                         />
-                        <button
-                            onClick={handleSend}
-                            disabled={isLoading}
-                            className="bg-amber-600 text-white p-2 rounded-full hover:bg-amber-700 disabled:opacity-50"
-                        >
+                        <button onClick={handleSend} disabled={isLoading} className="bg-amber-600 text-white p-2 rounded-full hover:bg-amber-700 disabled:opacity-50">
                             <Send className="w-5 h-5" />
                         </button>
                     </div>
