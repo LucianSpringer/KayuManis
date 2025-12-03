@@ -17,7 +17,7 @@ import { MenuPage } from './src/pages/MenuPage';
 import { ProductDetailPage } from './src/pages/ProductDetailPage';
 import { ProfilePage } from './src/pages/ProfilePage';
 import { CheckoutPage } from './src/pages/CheckoutPage';
-import { AdminPage } from './src/pages/AdminPage';
+import { AdminDashboardPage } from './src/pages/AdminDashboardPage';
 import { BlogPage } from './src/pages/BlogPage';
 import { FAQPage } from './src/pages/FAQPage';
 import { InfoPage } from './src/pages/InfoPage';
@@ -29,6 +29,8 @@ import { OrderTrackingPage } from './src/pages/OrderTrackingPage';
 // Backend Init
 import { OrbitalDB } from './src/core/data/OrbitalDB';
 import { EdgeMiddleware } from './src/core/security/EdgeMiddleware';
+import { IdentityAccessEngine } from './src/core/security/IdentityAccessEngine';
+import { SubscriptionCore } from './src/core/commerce/SubscriptionCore';
 
 const ScrollToTop = () => {
     const { pathname } = useLocation();
@@ -38,9 +40,11 @@ const ScrollToTop = () => {
 
 const App: React.FC = () => {
     useEffect(() => {
-        // Initialize Shadow Backend
+        // Initialize Microservice Mesh
         OrbitalDB.getInstance();
         EdgeMiddleware.getInstance();
+        IdentityAccessEngine.getInstance(); // Boot Auth
+        SubscriptionCore.getInstance(); // Boot Billing
     }, []);
 
     return (
@@ -59,7 +63,7 @@ const App: React.FC = () => {
                             <Route path="/product/:id" element={<ProductDetailPage />} />
                             <Route path="/profile" element={<ProfilePage />} />
                             <Route path="/checkout" element={<CheckoutPage />} />
-                            <Route path="/admin" element={<AdminPage />} />
+                            <Route path="/admin" element={<AdminDashboardPage />} />
                             <Route path="/blog" element={<BlogPage />} />
                             <Route path="/faq" element={<FAQPage />} />
                             <Route path="/info" element={<InfoPage />} />
