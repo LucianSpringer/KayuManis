@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Star, ShoppingCart, Heart, Phone, CheckCircle, AlertCircle } from 'lucide-react';
 import { ProductEngine } from '../core/catalogue/ProductEngine';
 import { InventoryAllocator } from '../core/catalogue/InventoryAllocator';
+import { TelemetryEngine } from '../core/analytics/TelemetryEngine';
+import { SmartOvenEngine } from '../core/production/SmartOvenEngine';
 import { CartContext } from '../context/CartContext';
 
 export const ProductDetailPage: React.FC = () => {
@@ -13,14 +15,22 @@ export const ProductDetailPage: React.FC = () => {
     // Engine Injection
     const productEngine = useMemo(() => ProductEngine.getInstance(), []);
     const inventory = useMemo(() => InventoryAllocator.getInstance(), []);
+    const telemetry = useMemo(() => TelemetryEngine.getInstance(), []);
+    const oven = useMemo(() => SmartOvenEngine.getInstance(), []);
 
     const product = productEngine.getProductById(Number(id));
+
+    // Log telemetry on view
+    React.useEffect(() => {
+        if (product) telemetry.logView(product.id);
+    }, [product, telemetry]);
 
     if (!product) return <div className="p-20 text-center font-bold text-red-500">Product Not Found via Engine Query.</div>;
 
     const stock = inventory.getAvailableStock(product.id);
     const healthIndex = inventory.getInventoryHealthIndex(product.id);
     const isWishlisted = wishlist.includes(product.id);
+    const canBulkOrder = oven.checkCapacity(new Date(), 50);
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-12 animate-fade-in">
@@ -40,6 +50,7 @@ export const ProductDetailPage: React.FC = () => {
                     <div className="flex items-center gap-4 mb-4">
                         <span className="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">{product.category}</span>
                         {stock < 10 && stock > 0 && <span className="bg-red-100 text-red-800 text-xs font-bold px-3 py-1 rounded-full animate-pulse">Low Stock: {stock}</span>}
+                        {canBulkOrder && <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">High Capacity Production Available</span>}
                     </div>
 
                     <h1 className="text-4xl md:text-5xl font-serif font-bold text-stone-900 mb-6">{product.name}</h1>

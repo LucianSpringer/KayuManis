@@ -5,6 +5,7 @@ import { CartContext } from '../context/CartContext';
 import { DeliveryGeofencing } from '../core/logistics/DeliveryGeofencing';
 import { TransactionLedger } from '../core/commerce/TransactionLedger';
 import { InventoryAllocator } from '../core/catalogue/InventoryAllocator';
+import { NotificationEngine } from '../core/notifications/NotificationEngine';
 
 export const CheckoutPage: React.FC = () => {
     const { cart, total, discountAmount, clearCart, addPoints, removeFromCart, updateQuantity } = useContext(CartContext);
@@ -15,6 +16,7 @@ export const CheckoutPage: React.FC = () => {
     const logistics = React.useMemo(() => DeliveryGeofencing.getInstance(), []);
     const ledger = React.useMemo(() => TransactionLedger.getInstance(), []);
     const inventory = React.useMemo(() => InventoryAllocator.getInstance(), []);
+    const notifier = React.useMemo(() => NotificationEngine.getInstance(), []);
 
     // State
     const [deliveryMethod, setDeliveryMethod] = useState<'pickup' | 'delivery'>('delivery');
@@ -60,7 +62,15 @@ export const CheckoutPage: React.FC = () => {
             ledger.commitTransaction(item);
         });
 
-        // 3. Simulate API Latency
+        // 3. Trigger Notification
+        await notifier.dispatch(
+            "customer@example.com",
+            "EMAIL",
+            "ORDER_CONFIRMED",
+            { name: "Customer", orderId: ledger.getLedgerHistory().slice(-1)[0]?.traceId || "PENDING-ID", total: grandTotal }
+        );
+
+        // 4. Simulate API Latency
         await new Promise(resolve => setTimeout(resolve, 1500));
 
         const earnedPoints = Math.floor(grandTotal / 10000);

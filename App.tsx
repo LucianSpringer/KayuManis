@@ -24,6 +24,7 @@ import { InfoPage } from './src/pages/InfoPage';
 import { CustomOrderPage } from './src/pages/CustomOrderPage';
 import { ResellerPage } from './src/pages/ResellerPage';
 import { SubscriptionPage } from './src/pages/SubscriptionPage';
+import { OrderTrackingPage } from './src/pages/OrderTrackingPage';
 
 // Backend Init
 import { OrbitalDB } from './src/core/data/OrbitalDB';
@@ -65,6 +66,7 @@ const App: React.FC = () => {
                             <Route path="/custom-order" element={<CustomOrderPage />} />
                             <Route path="/reseller" element={<ResellerPage />} />
                             <Route path="/subscription" element={<SubscriptionPage />} />
+                            <Route path="/track" element={<OrderTrackingPage />} />
                         </Routes>
                     </main>
 
