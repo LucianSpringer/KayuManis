@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Truck, Clock, Store, ChevronRight, Lock, CheckCircle, Banknote, CreditCard, Calendar, Trash2 } from 'lucide-react';
-import { CartContext } from '../../components/Common';
+import { CartContext } from '../context/CartContext';
 import { DeliveryGeofencing } from '../core/logistics/DeliveryGeofencing';
 import { TransactionLedger } from '../core/commerce/TransactionLedger';
 import { InventoryAllocator } from '../core/catalogue/InventoryAllocator';

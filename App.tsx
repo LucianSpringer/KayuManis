@@ -1,10 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { Navbar, Footer, CartSidebar, CartContext, BakerAIWidget, NewsletterPopup } from './components/Common';
-import { HomePage, MenuPage, ProductDetailPage, ProfilePage, AdminPage, FAQPage, BlogPage, InfoPage, CustomOrderPage, ResellerPage, SubscriptionPage } from './src/pages/MainPages';
+
+// Components
+import { Navbar } from './src/components/layout/Navbar';
+import { Footer } from './src/components/layout/Footer';
+import { CartSidebar } from './src/components/commerce/CartSidebar';
+import { BakerAIWidget } from './src/components/ai/BakerAIWidget';
+import { NewsletterPopup } from './src/components/marketing/NewsletterPopup';
+
+// Context
+import { CartContext } from './src/context/CartContext';
+
+// Pages
+import { HomePage } from './src/pages/HomePage';
+import { MenuPage } from './src/pages/MenuPage';
+import { ProfilePage } from './src/pages/ProfilePage';
+import { AdminPage } from './src/pages/AdminPage';
+import { SubscriptionPage } from './src/pages/SubscriptionPage';
 import { CheckoutPage } from './src/pages/CheckoutPage';
+import { ProductDetailPage, FAQPage, BlogPage, InfoPage, CustomOrderPage, ResellerPage } from './src/pages/Placeholders';
+
+// Types & Constants
 import { Product, CartItem, Review } from './types';
 import { TESTIMONIALS } from './constants';
+
+// Core Engines
 import { TransactionLedger } from './src/core/commerce/TransactionLedger';
 import { InventoryAllocator } from './src/core/catalogue/InventoryAllocator';
 
