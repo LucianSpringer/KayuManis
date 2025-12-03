@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useState } from 'react';
-import { LogOut, User as UserIcon, Heart, Star, Package, ChevronRight } from 'lucide-react';
+import { LogOut, User as UserIcon, Heart, Star, Package, ChevronRight, Users } from 'lucide-react';
 import { CartContext } from '../context/CartContext';
 import { ResellerEngine } from '../core/commerce/ResellerEngine';
 import { ProductCard } from '../components/products/ProductCard';
@@ -9,7 +9,7 @@ import { FamilyAccountManager } from '../components/profile/FamilyAccountManager
 export const ProfilePage: React.FC = () => {
     const { userPoints, wishlist } = useContext(CartContext);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [activeTab, setActiveTab] = useState<'buyer' | 'reseller'>('buyer');
+    const [activeTab, setActiveTab] = useState<'buyer' | 'reseller' | 'family'>('buyer');
 
     // Engine Logic Injection
     const resellerEngine = useMemo(() => ResellerEngine.getInstance(), []);
@@ -43,22 +43,28 @@ export const ProfilePage: React.FC = () => {
             </div>
 
             {/* Toggle Switch */}
-            <div className="flex gap-4 mb-8 border-b border-stone-200 pb-1">
+            <div className="flex gap-4 mb-8 border-b border-stone-200 pb-1 overflow-x-auto">
                 <button
                     onClick={() => setActiveTab('buyer')}
-                    className={`pb-4 px-4 font-bold text-lg transition ${activeTab === 'buyer' ? 'text-amber-600 border-b-4 border-amber-600' : 'text-stone-400 hover:text-stone-600'}`}
+                    className={`pb-4 px-4 font-bold text-lg transition whitespace-nowrap ${activeTab === 'buyer' ? 'text-amber-600 border-b-4 border-amber-600' : 'text-stone-400 hover:text-stone-600'}`}
                 >
                     Buyer Dashboard
                 </button>
                 <button
+                    onClick={() => setActiveTab('family')}
+                    className={`pb-4 px-4 font-bold text-lg transition whitespace-nowrap ${activeTab === 'family' ? 'text-amber-600 border-b-4 border-amber-600' : 'text-stone-400 hover:text-stone-600'}`}
+                >
+                    Household & Invoices
+                </button>
+                <button
                     onClick={() => setActiveTab('reseller')}
-                    className={`pb-4 px-4 font-bold text-lg transition ${activeTab === 'reseller' ? 'text-amber-600 border-b-4 border-amber-600' : 'text-stone-400 hover:text-stone-600'}`}
+                    className={`pb-4 px-4 font-bold text-lg transition whitespace-nowrap ${activeTab === 'reseller' ? 'text-amber-600 border-b-4 border-amber-600' : 'text-stone-400 hover:text-stone-600'}`}
                 >
                     Reseller Network
                 </button>
             </div>
 
-            {/* BUYER VIEW (Restored from Original) */}
+            {/* BUYER VIEW */}
             {activeTab === 'buyer' && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {/* User Info & Points */}
@@ -81,23 +87,6 @@ export const ProfilePage: React.FC = () => {
                     </div>
 
                     <div className="md:col-span-2 space-y-8">
-                        {/* Order History */}
-                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
-                            <h3 className="font-bold text-lg text-stone-900 mb-6 flex items-center gap-2">
-                                <Package className="w-5 h-5 text-amber-600" /> Recent Orders
-                            </h3>
-                            <div className="border border-stone-100 rounded-xl p-4 hover:bg-stone-50 transition flex justify-between items-center">
-                                <div>
-                                    <div className="font-bold text-stone-800">#ORD-992</div>
-                                    <div className="text-xs text-stone-500">2023-10-15</div>
-                                </div>
-                                <div className="text-right">
-                                    <div className="font-bold text-stone-900">Rp 150.000</div>
-                                    <span className="inline-block bg-green-100 text-green-700 text-xs px-2 py-1 rounded font-bold">Delivered</span>
-                                </div>
-                            </div>
-                        </div>
-
                         {/* Wishlist */}
                         <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
                             <h3 className="font-bold text-lg text-stone-900 mb-6 flex items-center gap-2">
@@ -115,7 +104,14 @@ export const ProfilePage: React.FC = () => {
                 </div>
             )}
 
-            {/* RESELLER VIEW (High-Yield MLM) */}
+            {/* FAMILY VIEW (New Integration) */}
+            {activeTab === 'family' && (
+                <div className="animate-fade-in">
+                    <FamilyAccountManager />
+                </div>
+            )}
+
+            {/* RESELLER VIEW */}
             {activeTab === 'reseller' && networkStats && (
                 <div className="bg-stone-900 text-white p-8 rounded-3xl mb-8 relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-amber-600 rounded-full blur-[100px] opacity-20 pointer-events-none"></div>

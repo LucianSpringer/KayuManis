@@ -10,6 +10,7 @@ import { Footer } from './src/components/layout/Footer';
 import { CartSidebar } from './src/components/commerce/CartSidebar';
 import { BakerAIWidget } from './src/components/ai/BakerAIWidget';
 import { NewsletterPopup } from './src/components/widgets/NewsletterPopup';
+import { OccasionReminder } from './src/components/widgets/OccasionReminder';
 
 // Pages
 import { HomePage } from './src/pages/HomePage';
@@ -26,11 +27,14 @@ import { ResellerPage } from './src/pages/ResellerPage';
 import { SubscriptionPage } from './src/pages/SubscriptionPage';
 import { OrderTrackingPage } from './src/pages/OrderTrackingPage';
 
-// Backend Init
+// Backend Init - THE CRITICAL MESH
 import { OrbitalDB } from './src/core/data/OrbitalDB';
 import { EdgeMiddleware } from './src/core/security/EdgeMiddleware';
 import { IdentityAccessEngine } from './src/core/security/IdentityAccessEngine';
 import { SubscriptionCore } from './src/core/commerce/SubscriptionCore';
+import { OccasionPredictionEngine } from './src/core/analytics/OccasionPredictionEngine';
+import { FamilyGraphEngine } from './src/core/identity/FamilyGraphEngine';
+import { FiscalDocumentEngine } from './src/core/documents/FiscalDocumentEngine';
 
 const ScrollToTop = () => {
     const { pathname } = useLocation();
@@ -40,11 +44,16 @@ const ScrollToTop = () => {
 
 const App: React.FC = () => {
     useEffect(() => {
-        // Initialize Microservice Mesh
+        // High-Yield Initialization: Bootstraps the Simulation Mesh
+        console.log("[System] Booting Engines...");
         OrbitalDB.getInstance();
         EdgeMiddleware.getInstance();
-        IdentityAccessEngine.getInstance(); // Boot Auth
-        SubscriptionCore.getInstance(); // Boot Billing
+        IdentityAccessEngine.getInstance();
+        SubscriptionCore.getInstance();
+        OccasionPredictionEngine.getInstance();
+        FamilyGraphEngine.getInstance();
+        FiscalDocumentEngine.getInstance();
+        console.log("[System] Engines Ready.");
     }, []);
 
     return (
@@ -54,6 +63,7 @@ const App: React.FC = () => {
                 <div className="flex flex-col min-h-screen bg-stone-50 font-sans text-stone-800">
                     <Navbar />
                     <NewsletterPopup />
+                    <OccasionReminder />
                     <CartSidebar />
 
                     <main className="flex-grow">
